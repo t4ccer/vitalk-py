@@ -1,6 +1,9 @@
 import os
 import serial
+import threading
 from flask import Flask, Response, jsonify, request
+
+serial_lock = threading.Semaphore()
 
 
 def calcCRC(buf):
@@ -205,6 +208,7 @@ class Optolink:
         self.device = device
 
     def __enter__(self):
+        serial_lock.acquire()
         self.tty = serial.Serial(
             port=self.device,
             baudrate=4800,
@@ -233,6 +237,7 @@ class Optolink:
 
     def __exit__(self, exception_type, exception_value, exception_traceback):
         self.tty.__exit__(exception_type, exception_value, exception_traceback)
+        serial_lock.release()
 
     def get_measurements(self):
         res = {}
