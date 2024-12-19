@@ -150,7 +150,7 @@ class SensorU:
         return int.from_bytes(r, "little", signed=False)
 
     def write_value(self, tty, value):
-        value = int(value)
+        value = int(float(value))
         data = value.to_bytes(self.size, "little")
         vito_write(tty, self.location, data)
 
