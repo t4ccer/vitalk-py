@@ -1,0 +1,12 @@
+[Unit]
+Description=vitalk-py
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/home/pi/.local/bin/gunicorn --workers 8 --bind 0.0.0.0:3001 --chdir /home/pi/vitalk-py vitalk:app
+User=pi
+Group=pi
+
+[Install]
+WantedBy=multi-user.target
